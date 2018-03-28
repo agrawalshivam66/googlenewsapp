@@ -1,7 +1,6 @@
 package com.example.shivam_pc.googlenewsapp;
 
 import android.content.Context;
-import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -16,6 +15,7 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -52,9 +52,13 @@ public class topstoriesfragments extends Fragment implements LoaderManager.Loade
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
                 news currentnews = mAdapter.getItem(position);
                 String newsurl = currentnews.geturl().toString();
-                Intent webint = new Intent(getActivity(),webpage_opener.class);
-                webint.putExtra("url",newsurl);
-                startActivity(webint);
+                webpage_opener ldf = new webpage_opener ();
+                Bundle args = new Bundle();
+                args.putString("YourKey", newsurl);
+                ldf.setArguments(args);
+
+//Inflate the fragment
+                getFragmentManager().beginTransaction().add(R.id.weblayout, ldf).commit();
             }
 
         });
