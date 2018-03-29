@@ -10,6 +10,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,20 +33,21 @@ public class WorldFragment extends Fragment implements LoaderManager.LoaderCallb
     private  String google_api_url = "https://newsapi.org/v2/top-headlines?sources=google-news&apiKey=6ca8f05aaed846a292b1d0b35e524bbf";
     private newsAdapter mAdapter;
     private TextView empty;
-
+    SwipeRefreshLayout swipeRefreshLayout;
+    View rootvview;
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
-        View rootvview=inflater.inflate(R.layout.news_activity,container,false);
+        rootvview = inflater.inflate(R.layout.news_activity, container, false);
 
 
         mAdapter = new newsAdapter((news_activity) getActivity(), new ArrayList<news>());
-        ListView news_list_view = (ListView)rootvview.findViewById(R.id.list);
+        ListView news_list_view = (ListView) rootvview.findViewById(R.id.list);
 
-
-        p = (ProgressBar)rootvview.findViewById(R.id.loading_spinner);
+        swipeRefreshLayout = (SwipeRefreshLayout) rootvview.findViewById(R.id.swiperefresh);
+        p = (ProgressBar) rootvview.findViewById(R.id.loading_spinner);
         news_list_view.setAdapter(mAdapter);
 
-        empty = (TextView)rootvview.findViewById(R.id.empty_view);
+        empty = (TextView) rootvview.findViewById(R.id.empty_view);
         news_list_view.setEmptyView(empty);
 
 
@@ -54,13 +56,29 @@ public class WorldFragment extends Fragment implements LoaderManager.LoaderCallb
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
                 news currentnews = mAdapter.getItem(position);
                 String newsurl = currentnews.geturl().toString();
-                Intent webint = new Intent(getActivity(),webpage_opener.class);
-                webint.putExtra("url",newsurl);
+                Intent webint = new Intent(getActivity(), webpage_opener.class);
+                webint.putExtra("url", newsurl);
                 startActivity(webint);
             }
 
         });
 
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                loadurl();
+            }
+
+
+        });
+
+        loadurl();
+
+
+        return rootvview;
+    }
+
+    private void loadurl() {
 
 
         // Get a reference to the ConnectivityManager to check state of network connectivity
@@ -75,6 +93,7 @@ public class WorldFragment extends Fragment implements LoaderManager.LoaderCallb
         if (networkInfo != null && networkInfo.isConnected())
 
         {
+            swipeRefreshLayout.setRefreshing(true);
             // Get a reference to the LoaderManager, in order to interact with loaders.
             LoaderManager loaderManager = getLoaderManager();
 
@@ -82,22 +101,17 @@ public class WorldFragment extends Fragment implements LoaderManager.LoaderCallb
             // the bundle. Pass in this activity for the LoaderCallbacks parameter (which is valid
             // because this activity implements the LoaderCallbacks interface).
             loaderManager.initLoader(1, null, this);
-        }
-
-        else {
+        } else {
             // Otherwise, display error
             // First, hide loading indicator so error message will be visible
             View loadingIndicator = rootvview.findViewById(R.id.loading_spinner);
             loadingIndicator.setVisibility(View.GONE);
+            swipeRefreshLayout.setRefreshing(false);
 
             // Update empty state with no connection error message
             empty.setText("No Internet Connection");
         }
-        return rootvview;
     }
-
-
-
 
 
     @Override
@@ -122,6 +136,7 @@ public class WorldFragment extends Fragment implements LoaderManager.LoaderCallb
             assert p != null;
 
             p.setVisibility(View.GONE);
+            swipeRefreshLayout.setRefreshing(false);
         }
     }
 
@@ -131,7 +146,3 @@ public class WorldFragment extends Fragment implements LoaderManager.LoaderCallb
         mAdapter.clear();
     }
 }
-
-
-
-
