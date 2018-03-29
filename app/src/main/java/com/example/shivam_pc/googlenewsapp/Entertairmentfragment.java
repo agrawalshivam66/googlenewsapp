@@ -16,7 +16,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -27,12 +26,13 @@ import java.util.List;
  */
 public class Entertairmentfragment extends Fragment implements LoaderManager.LoaderCallbacks<List<news>> {
 
-    ProgressBar p;
+
+    SwipeRefreshLayout swipeRefreshLayout;
+    View rootvview;
     private String google_api_url = "https://newsapi.org/v2/top-headlines?sources=ign&apiKey=6ca8f05aaed846a292b1d0b35e524bbf";
     private newsAdapter mAdapter;
     private TextView empty;
-    SwipeRefreshLayout swipeRefreshLayout;
-    View rootvview;
+
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         rootvview = inflater.inflate(R.layout.news_activity, container, false);
@@ -42,9 +42,10 @@ public class Entertairmentfragment extends Fragment implements LoaderManager.Loa
         ListView news_list_view = (ListView) rootvview.findViewById(R.id.list);
 
         swipeRefreshLayout = (SwipeRefreshLayout) rootvview.findViewById(R.id.swiperefresh);
-        p = (ProgressBar) rootvview.findViewById(R.id.loading_spinner);
-        news_list_view.setAdapter(mAdapter);
+        swipeRefreshLayout.setColorSchemeResources(R.color.colorAccent);
 
+
+        news_list_view.setAdapter(mAdapter);
         empty = (TextView) rootvview.findViewById(R.id.empty_view);
         news_list_view.setEmptyView(empty);
 
@@ -130,10 +131,6 @@ public class Entertairmentfragment extends Fragment implements LoaderManager.Loa
             // data set. This will trigger the ListView to update.
             if (newsList != null && !newsList.isEmpty()) {
                 mAdapter.addAll(newsList);
-
-                assert p != null;
-
-                p.setVisibility(View.GONE);
                 swipeRefreshLayout.setRefreshing(false);
             }
         }

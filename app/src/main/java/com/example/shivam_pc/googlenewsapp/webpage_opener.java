@@ -1,12 +1,9 @@
 package com.example.shivam_pc.googlenewsapp;
 
-import android.app.Fragment;
+import android.app.Activity;
 import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -16,22 +13,22 @@ import android.widget.ProgressBar;
  * Created by Shivam-PC on 21-03-2018.
  */
 
-public class webpage_opener extends Fragment {
+public class webpage_opener extends Activity {
 
     WebView webView;
     ProgressBar progressBar;
 
-    @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.webpage, container, false);
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.webpage);
 
 
         //Retrieve the value
-        String url = getArguments().getString("YourKey");
+        String url = getIntent().getExtras().getString("url");
 
-        progressBar = (ProgressBar) view.findViewById(R.id.loading_spinner);
-        webView = (WebView) view.findViewById(R.id.webpage);
+        progressBar = (ProgressBar) findViewById(R.id.loading_spinner);
+        webView = (WebView) findViewById(R.id.webpage);
 
         webView.setWebViewClient(new myWebclient());
 
@@ -54,9 +51,17 @@ public class webpage_opener extends Fragment {
         webView.getSettings().setJavaScriptEnabled(true);
         webView.loadUrl(url);
         progressBar.setProgress(0);
-        return view;
+
     }
 
+    @Override
+    public void onBackPressed() {
+        if (webView.canGoBack()) {
+            webView.goBack();
+        } else {
+            super.onBackPressed();
+        }
+    }
 
     public class myWebclient extends WebViewClient{
         @Override
@@ -76,14 +81,6 @@ public class webpage_opener extends Fragment {
             view.loadUrl(url);
             return super.shouldOverrideUrlLoading(view, url);
         }
-    }
-
-
-    public void onBackPressed() {
-        if (webView.canGoBack()) {
-            webView.goBack();
-        }
-        else onBackPressed();
     }
 
 }
