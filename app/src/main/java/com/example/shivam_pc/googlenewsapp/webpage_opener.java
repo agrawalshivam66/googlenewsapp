@@ -36,11 +36,7 @@ public class webpage_opener extends Activity {
             @Override
             public void onProgressChanged(WebView view, int newProgress) {
 
-                if (newProgress > 20) {
-                    newProgress = newProgress * 3;
-                    progressBar.setProgress(newProgress);
-                } else if (newProgress <= 20) {
-                    newProgress = newProgress * 2;
+                if (newProgress <= 100) {
                     progressBar.setProgress(newProgress);
                 }
                 if (newProgress >= 100) {
@@ -51,7 +47,6 @@ public class webpage_opener extends Activity {
         webView.getSettings().setJavaScriptEnabled(true);
         webView.loadUrl(url);
         progressBar.setProgress(0);
-
     }
 
     @Override
