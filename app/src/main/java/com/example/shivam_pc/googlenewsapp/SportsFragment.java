@@ -99,9 +99,7 @@ public class SportsFragment extends Fragment implements LoaderManager.LoaderCall
             loaderManager.initLoader(1, null, this);
         } else {
             // Otherwise, display error
-            // First, hide loading indicator so error message will be visible
-            View loadingIndicator = rootvview.findViewById(R.id.loading_spinner);
-            loadingIndicator.setVisibility(View.GONE);
+
             swipeRefreshLayout.setRefreshing(false);
 
             // Update empty state with no connection error message

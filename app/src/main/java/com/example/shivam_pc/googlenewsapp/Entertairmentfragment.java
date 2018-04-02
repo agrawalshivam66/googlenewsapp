@@ -18,6 +18,10 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -43,7 +47,6 @@ public class Entertairmentfragment extends Fragment implements LoaderManager.Loa
 
         swipeRefreshLayout = (SwipeRefreshLayout) rootvview.findViewById(R.id.swiperefresh);
         swipeRefreshLayout.setColorSchemeResources(R.color.colorAccent);
-
 
         news_list_view.setAdapter(mAdapter);
         empty = (TextView) rootvview.findViewById(R.id.empty_view);
@@ -102,9 +105,7 @@ public class Entertairmentfragment extends Fragment implements LoaderManager.Loa
             loaderManager.initLoader(1, null, this);
         } else {
             // Otherwise, display error
-            // First, hide loading indicator so error message will be visible
-            View loadingIndicator = rootvview.findViewById(R.id.loading_spinner);
-            loadingIndicator.setVisibility(View.GONE);
+
             swipeRefreshLayout.setRefreshing(false);
 
             // Update empty state with no connection error message
@@ -140,6 +141,9 @@ public class Entertairmentfragment extends Fragment implements LoaderManager.Loa
             // Loader reset, so we can clear out our existing data.
             mAdapter.clear();
         }
+
+
+
     }
 
 

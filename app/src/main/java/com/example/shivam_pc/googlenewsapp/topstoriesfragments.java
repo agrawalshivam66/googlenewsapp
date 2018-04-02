@@ -36,7 +36,6 @@ public class topstoriesfragments extends Fragment implements LoaderManager.Loade
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         rootvview = inflater.inflate(R.layout.news_activity, container, false);
 
-
         mAdapter = new newsAdapter((news_activity) getActivity(), new ArrayList<news>());
         ListView news_list_view = (ListView) rootvview.findViewById(R.id.list);
 
@@ -68,20 +67,16 @@ public class topstoriesfragments extends Fragment implements LoaderManager.Loade
 
 
         });
-
         loadurl();
-
 
         return rootvview;
     }
 
     private void loadurl() {
 
-
         // Get a reference to the ConnectivityManager to check state of network connectivity
         ConnectivityManager connMgr = (ConnectivityManager)
                 getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
-
 
         // Get details on the currently active default data network
         NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
@@ -100,9 +95,6 @@ public class topstoriesfragments extends Fragment implements LoaderManager.Loade
             loaderManager.initLoader(1, null, this);
         } else {
             // Otherwise, display error
-            // First, hide loading indicator so error message will be visible
-            View loadingIndicator = rootvview.findViewById(R.id.loading_spinner);
-            loadingIndicator.setVisibility(View.GONE);
             swipeRefreshLayout.setRefreshing(false);
 
             // Update empty state with no connection error message
@@ -124,7 +116,6 @@ public class topstoriesfragments extends Fragment implements LoaderManager.Loade
         empty.setText("No news Found");
         // Clear the adapter of previous news data
         mAdapter.clear();
-
 
         // data set. This will trigger the ListView to update.
         if (newsList != null && !newsList.isEmpty()) {

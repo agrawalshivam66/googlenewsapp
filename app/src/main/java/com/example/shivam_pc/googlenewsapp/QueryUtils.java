@@ -1,7 +1,5 @@
 package com.example.shivam_pc.googlenewsapp;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.text.TextUtils;
 import android.text.format.DateUtils;
 import android.util.Log;
@@ -36,6 +34,7 @@ public final class QueryUtils {
     private QueryUtils() {
     }
 
+
     public static List<news> fetchnewsData(String requestUrl) {
         URL url = createUrl(requestUrl);
 
@@ -47,7 +46,11 @@ public final class QueryUtils {
             Log.e(LOG_TAG, "Problem making the HTTP request.", e);
         }
         List<news> newslist1 = extractFeatureFromJson(jsonResponse);
+        return newslist1;
+    }
 
+    public static List<news> fetchnewsData_internal(String json) {
+        List<news> newslist1 = extractFeatureFromJson(json);
         return newslist1;
     }
 
@@ -118,24 +121,6 @@ public final class QueryUtils {
         return output.toString();
     }
 
-    private static Bitmap image(String src) {
-        if (src == null) {
-            src = "https://www.google.co.in/imgres?imgurl=https%3A%2F%2Fi5.walmartimages.com%2Fasr%2Ff752abb3-1b49-4f99-b68a-7c4d77b45b40_1.39d6c524f6033c7c58bd073db1b99786.jpeg%3FodnHeight%3D450%26odnWidth%3D450%26odnBg%3DFFFFFF&imgrefurl=https%3A%2F%2Fwww.walmart.com%2Fip%2FScotch-Multipurpose-Scissors-8in-Pointed-Gray-black%2F19675467&docid=_jQrOId75pO15M&tbnid=-pCCN7e53SUTOM%3A&vet=10ahUKEwiJ95jRpO7YAhXImJQKHVQGDS4QMwgxKAAwAA..i&w=275&h=275&bih=662&biw=1366&q=no%20image%20found&ved=0ahUKEwiJ95jRpO7YAhXImJQKHVQGDS4QMwgxKAAwAA&iact=mrc&uact=8";
-        }
-        try {
-            java.net.URL url = new java.net.URL(src);
-            HttpURLConnection connection = (HttpURLConnection) url
-                    .openConnection();
-            connection.setDoInput(true);
-            connection.connect();
-            InputStream input = connection.getInputStream();
-            Bitmap myBitmap = BitmapFactory.decodeStream(input);
-            return myBitmap;
-        } catch (IOException e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
 
     private static List<news> extractFeatureFromJson(String newsjson) {
         if (TextUtils.isEmpty(newsjson)) {
